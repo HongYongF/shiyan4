@@ -89,8 +89,28 @@
 
 .entry-item:hover{
     transform: scale(1.2,1.2);
+    animation: shake 1.5s ease;
 }
 
 #title:hover{
     transform: scale(1.2,1.2);
+}
+
+@keyframes shake {
+    20%{
+        transform: rotate(20deg);
+    }
+    40%{
+        transform: rotate(-20deg);
+    }
+    60%{
+        transform: rotate(10deg);
+    }
+    80%{
+        transform: rotate(-10deg);
+    }
+    100%{
+        transform: rotate(0);
+    }
+
 }

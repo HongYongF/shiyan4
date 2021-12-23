@@ -29,6 +29,7 @@
 		const dirTexture1 = new PIXI.Texture.fromImage("res/箭头.png");
 		const dirTexture2 = new PIXI.Texture.fromImage("res/箭头_选中.png");
 		const tabbar= new PIXI.Sprite.fromImage("res/indexBg1.png");
+
 		app.stage.addChild(bg);
 
 		tabbar.width = WIDTH/5;
@@ -60,6 +61,7 @@
 
 		bg.on("mousedown", function () {
 			this.isChoose = true;
+			maskList.forEach(mask=> mask.area.visible = false);
 		});
 		bg.on("mouseup", function () {
 			this.isChoose = false;
@@ -126,6 +128,7 @@
 			dirLeft.isMove = false;
 			dirRight.isMove = false;
 			dirLeft.on("mousedown", function () {
+				maskList.forEach(mask=> mask.area.visible = false);
 				dirLeft.isMove = true;
 			})
 			dirLeft.on("mouseup", function () {
@@ -136,6 +139,8 @@
 			})
 			dirRight.on("mousedown", function () {
 				dirRight.isMove = true;
+				maskList.forEach(mask=> mask.area.visible = false);
+
 			})
 			dirRight.on("mouseup", function () {
 				dirRight.isMove = false;
@@ -151,8 +156,17 @@
 			for (var i = 0; i < 4; i++) {
 				var text = new PIXI.Sprite.fromImage(`res/${name[i]}-文字块.png`);
 				var mask = new PIXI.Sprite.fromImage(`res/${name[i]}-面具.png`);
+				var textArea = new PIXI.Sprite.fromImage(`res/${name[i]}-提示框.png`);
+				textArea.visible = false;
+				textArea.anchor.set(0.5, 0.5);
+				textArea.y = HEIGHT/2;
+				textArea.x = WIDTH/2; 
+				textArea.height = HEIGHT*0.7;
+				textArea.width = WIDTH*0.7;
+				mask.area = textArea;
 				app.stage.addChild(text);
-				app.stage.addChild(mask);
+				// app.stage.addChild(mask);
+				app.stage.addChild(textArea);
 				text.width = textList[i].w / 1.5;
 				text.height = textList[i].whr * textList[i].w;
 				text.x = textList[i].x;
@@ -163,9 +177,18 @@
 				mask.width = whList[i].w;
 				mask.height = whList[i].whr * whList[i].w;
 				mask.text = text;
+				mask.interactive = true;
+				
 				list.push(mask);
 			}
-			list.forEach(mask => app.stage.addChild(mask));
+			list.forEach(mask => {
+				app.stage.addChild(mask);
+				mask.on("click",function(){
+					mask.area.visible = true;
+					app.stage.addChild(mask.area)
+					console.log(mask.area)
+				})
+			});
 			return list;
 		}
 
